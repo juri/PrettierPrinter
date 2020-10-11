@@ -1,0 +1,10 @@
+--closingparen balanced
+--ifdef no-indent
+--self insert
+--stripunusedargs closure-only
+--wraparguments before-first 
+--wrapcollections before-first
+--wrapparameters before-first
+--trimwhitespace always
+--commas always
+--maxwidth 120
