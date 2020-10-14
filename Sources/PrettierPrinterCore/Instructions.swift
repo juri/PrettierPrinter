@@ -16,7 +16,7 @@ private func groupOpenParser(_ s: String) -> Parser<[Instruction]> {
 }
 
 private func groupCloseParser(_ s: String) -> Parser<[Instruction]> {
-    PrettierPrinterParser.literal(s).map(instr(.dedent, .newline, .insert(s), .newline))
+    PrettierPrinterParser.literal(s).map(instr(.dedent, .newline, .insert(s)))
 }
 
 let openParenParser = groupOpenParser("(")

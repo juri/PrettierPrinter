@@ -42,7 +42,6 @@ final class PrettierPrinterTests: XCTestCase {
                 .dedent,
                 .newline,
                 .insert(")"),
-                .newline,
             ],
             instructions
         )

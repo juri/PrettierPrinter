@@ -16,7 +16,7 @@ class FormatterTests: XCTestCase {
         let output = try format(string: "Object(blorp=zonk, garp=bump)", settings: .init(indent: "\t"))
         XCTAssertEqual(
             output,
-            "Object(\n\tblorp=zonk,\n\tgarp=bump\n)\n"
+            "Object(\n\tblorp=zonk,\n\tgarp=bump\n)"
         )
     }
 }
