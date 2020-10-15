@@ -8,7 +8,7 @@ struct PrettierPrinter: ParsableCommand {
     )
 
     @Option(name: [.customShort("i"), .long], help: #"Indentation ("tab" or "sN" for N spaces)"#)
-    var indent: Indent
+    var indent: Indent = .spaces(4)
 
     mutating func run() throws {
         print(try format(string: readInput(), settings: FormatterSettings(indent: self.indent.indentation)))
@@ -35,6 +35,15 @@ extension Indent: ExpressibleByArgument {
             self = .spaces(count)
         } else {
             return nil
+        }
+    }
+}
+
+extension Indent: CustomStringConvertible {
+    var description: String {
+        switch self {
+        case .spaces(let n): return "s\(n)"
+        case .tab: return "tab"
         }
     }
 }
