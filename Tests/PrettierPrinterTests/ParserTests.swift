@@ -14,6 +14,24 @@ final class PrettierPrinterTests: XCTestCase {
         XCTAssertEqual([.insert("abc")], instructions)
     }
 
+    func testQuotes() throws {
+        let (instructions, rest) = PrettierPrinterCore.instructionsParser.run(#"abc "z\na\"p" pop"#)
+        XCTAssertEqual(rest, "")
+        XCTAssertEqual([.insert("abc "), .insert(#""z\na\"p""#), .insert(" pop")], instructions)
+    }
+
+    func testParensInQuotes() throws {
+        let (instructions, rest) = PrettierPrinterCore.instructionsParser.run(#"abc "Olp(neep)" pop"#)
+        XCTAssertEqual(rest, "")
+        XCTAssertEqual([.insert("abc "), .insert(#""Olp(neep)""#), .insert(" pop")], instructions)
+    }
+
+    func testEscapedStrings() throws {
+        let (instructions, rest) = PrettierPrinterCore.instructionsParser.run(#"abc\npop"#)
+        XCTAssertEqual(rest, "")
+        XCTAssertEqual([.insert("abc\\npop")], instructions)
+    }
+
     func testOpenParen() throws {
         let (instructions, rest) = PrettierPrinterCore.instructionsParser.run("(")
         XCTAssertEqual(rest, "")
@@ -50,6 +68,9 @@ final class PrettierPrinterTests: XCTestCase {
     static var allTests = [
         ("testEmpty", testEmpty),
         ("testNoSpecial", testNoSpecial),
+        ("testQuotes", testQuotes),
+        ("testParensInQuotes", testParensInQuotes),
+        ("testEscapedStrings", testEscapedStrings),
         ("testOpenParen", testOpenParen),
         ("testStripLeadingWhitespaceAfterNewline", testStripLeadingWhitespaceAfterNewline),
         ("testPhrase", testPhrase),

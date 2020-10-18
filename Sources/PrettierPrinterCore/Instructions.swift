@@ -28,7 +28,22 @@ let closeBracketParser = groupCloseParser("]")
 
 let commaParser = PrettierPrinterParser.literal(",").map(instr(.insert(","), .newline))
 
-private let specials = ["(", ")", "[", "]", "{", "}", ","] as Set<Character>
+// Handle double-quoted strings with escaped quotes inside them. Also recognize other escaped
+// characters.
+let escapables = #"\"0nrtvfb"#.map { c -> Parser<String> in
+    let s = String(c)
+    return literal(s).map(const(s))
+}
+let escaped = zip(literal("\\"), oneOf(escapables)).map { #"\\#($0.1)"# }
+let notQuote = prefix(while: { $0 != "\"" && $0 != "\\" }).filter { !$0.isEmpty }.map(String.init)
+let stringPart = oneOf([escaped, notQuote])
+let stringContent = oneOrMore(stringPart, separatedBy: always(())).map { $0.joined() }
+
+let quoted = zip(literal("\""), stringContent, literal("\"")).map { "\"\($0.1)\"" }
+
+let quotedParser = quoted.map { [.insert(String($0))] as [Instruction] }
+
+private let specials = ["(", ")", "[", "]", "{", "}", ",", "\""] as Set<Character>
 
 /// A parser that converts one or more non-special characters into an `Instruction.insert`.
 let otherParser = PrettierPrinterParser
@@ -37,6 +52,7 @@ let otherParser = PrettierPrinterParser
     .map { [.insert(String($0))] as [Instruction] }
 
 let partParser = PrettierPrinterParser.oneOf([
+    quotedParser,
     otherParser,
     openParenParser,
     closeParenParser,

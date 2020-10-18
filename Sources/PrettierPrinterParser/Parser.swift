@@ -48,6 +48,11 @@ extension Parser {
     }
 }
 
+public let char = Parser<Character> { str in
+    guard !str.isEmpty else { return nil }
+    return str.removeFirst()
+}
+
 public func literal(_ p: String) -> Parser<Void> {
     Parser<Void> { str in
         guard str.hasPrefix(p) else { return nil }
@@ -102,4 +107,40 @@ public func zeroOrMore<A>(_ p: Parser<A>, separatedBy s: Parser<Void>) -> Parser
         str = original
         return matches
     }
+}
+
+public func oneOrMore<A>(_ p: Parser<A>, separatedBy s: Parser<Void>) -> Parser<[A]> {
+    Parser<[A]> { str -> [A]? in
+        guard let match = p.run(&str) else {
+            return nil
+        }
+        guard s.run(&str) != nil else {
+            return [match]
+        }
+        if let rest = zeroOrMore(p, separatedBy: s).run(&str) {
+            return [match] + rest
+        }
+        return [match]
+    }
+}
+
+public func zip<A, B>(_ a: Parser<A>, _ b: Parser<B>) -> Parser<(A, B)> {
+    Parser<(A, B)> { str -> (A, B)? in
+        let original = str
+        guard let matchA = a.run(&str) else { return nil }
+        guard let matchB = b.run(&str) else {
+            str = original
+            return nil
+        }
+        return (matchA, matchB)
+    }
+}
+
+public func zip<A, B, C>(
+    _ a: Parser<A>,
+    _ b: Parser<B>,
+    _ c: Parser<C>
+) -> Parser<(A, B, C)> {
+    zip(a, zip(b, c))
+        .map { a, bc in (a, bc.0, bc.1) }
 }
