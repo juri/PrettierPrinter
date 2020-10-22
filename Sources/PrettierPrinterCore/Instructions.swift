@@ -49,7 +49,7 @@ private let specials = ["(", ")", "[", "]", "{", "}", ",", "\""] as Set<Characte
 let otherParser = PrettierPrinterParser
     .prefix(while: { !specials.contains($0) })
     .filter { !$0.isEmpty }
-    .map { [.insert(String($0))] as [Instruction] }
+    .map { [.insert(String($0.filter { $0 != "\n" }))] as [Instruction] }
 
 let partParser = PrettierPrinterParser.oneOf([
     quotedParser,

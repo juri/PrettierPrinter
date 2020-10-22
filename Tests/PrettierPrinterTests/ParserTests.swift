@@ -65,6 +65,24 @@ final class PrettierPrinterTests: XCTestCase {
         )
     }
 
+    func testRemoveNewlines() throws {
+        let (instructions, rest) = PrettierPrinterCore.instructionsParser.run("A(b\n)")
+        XCTAssertEqual(rest, "")
+        XCTAssertEqual(
+            [
+                .insert("A"),
+                .insert("("),
+                .indent,
+                .newline,
+                .insert("b"),
+                .dedent,
+                .newline,
+                .insert(")"),
+            ],
+            instructions
+        )
+    }
+
     static var allTests = [
         ("testEmpty", testEmpty),
         ("testNoSpecial", testNoSpecial),
