@@ -82,15 +82,4 @@ final class PrettierPrinterTests: XCTestCase {
             instructions
         )
     }
-
-    static var allTests = [
-        ("testEmpty", testEmpty),
-        ("testNoSpecial", testNoSpecial),
-        ("testQuotes", testQuotes),
-        ("testParensInQuotes", testParensInQuotes),
-        ("testEscapedStrings", testEscapedStrings),
-        ("testOpenParen", testOpenParen),
-        ("testStripLeadingWhitespaceAfterNewline", testStripLeadingWhitespaceAfterNewline),
-        ("testPhrase", testPhrase),
-    ]
 }
