@@ -28,14 +28,7 @@ let closeBracketParser = groupCloseParser("]")
 
 let commaParser = PrettierPrinterParser.literal(",").map(instr(.insert(","), .newline))
 
-// Handle double-quoted strings with escaped quotes inside them. Also recognize other escaped
-// characters.
-let escapables = #"\"0nrtvfb"#.map { c -> Parser<String> in
-    let s = String(c)
-    return literal(s).map(const(s))
-}
-
-let escaped = zip(literal("\\"), oneOf(escapables)).map { #"\\#($0.1)"# }
+let escaped = zip(literal("\\"), char).map { #"\\#($0.1)"# }
 let notQuote = prefix(while: { $0 != "\"" && $0 != "\\" }).filter { !$0.isEmpty }.map(String.init)
 let stringPart = oneOf([escaped, notQuote])
 let stringContent = oneOrMore(stringPart, separatedBy: always(())).map { $0.joined() }
