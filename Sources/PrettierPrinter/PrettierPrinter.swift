@@ -1,6 +1,7 @@
 import ArgumentParser
 import PrettierPrinterCore
 
+@main
 struct PrettierPrinter: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "prpr",
@@ -42,7 +43,7 @@ extension Indent: ExpressibleByArgument {
 extension Indent: CustomStringConvertible {
     var description: String {
         switch self {
-        case .spaces(let n): return "s\(n)"
+        case let .spaces(n): return "s\(n)"
         case .tab: return "tab"
         }
     }
@@ -55,5 +56,3 @@ private func readInput() -> String {
     )
     .joined()
 }
-
-PrettierPrinter.main()
