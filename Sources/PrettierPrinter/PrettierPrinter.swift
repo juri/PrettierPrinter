@@ -1,6 +1,7 @@
 import ArgumentParser
 import PrettierPrinterCore
 
+@main
 struct PrettierPrinter: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "prpr",
@@ -55,5 +56,3 @@ private func readInput() -> String {
     )
     .joined()
 }
-
-PrettierPrinter.main()
