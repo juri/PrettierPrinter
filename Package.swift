@@ -23,7 +23,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser", from: "0.3.0"),
     ],
     targets: [
-        .target(
+        .executableTarget(
             name: "PrettierPrinter",
             dependencies: [
                 "PrettierPrinterCore",
