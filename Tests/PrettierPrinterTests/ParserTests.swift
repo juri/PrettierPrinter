@@ -20,6 +20,12 @@ final class PrettierPrinterTests: XCTestCase {
         XCTAssertEqual([.insert("abc "), .insert(#""z\na\"p""#), .insert(" pop")], instructions)
     }
 
+    func testEscapedSingleQuote() throws {
+        let (instructions, rest) = PrettierPrinterCore.instructionsParser.run(#"abc "don\'t do it" pop"#)
+        XCTAssertEqual(rest, "")
+        XCTAssertEqual([.insert("abc "), .insert(#""don\'t do it""#), .insert(" pop")], instructions)
+    }
+
     func testParensInQuotes() throws {
         let (instructions, rest) = PrettierPrinterCore.instructionsParser.run(#"abc "Olp(neep)" pop"#)
         XCTAssertEqual(rest, "")
