@@ -43,7 +43,7 @@ extension Indent: ExpressibleByArgument {
 extension Indent: CustomStringConvertible {
     var description: String {
         switch self {
-        case .spaces(let n): return "s\(n)"
+        case let .spaces(n): return "s\(n)"
         case .tab: return "tab"
         }
     }

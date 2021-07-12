@@ -15,26 +15,26 @@ public struct Parser<A> {
     }
 }
 
-extension Parser {
-    public func run(_ str: String) -> (match: A?, rest: Substring) {
+public extension Parser {
+    func run(_ str: String) -> (match: A?, rest: Substring) {
         var str = str[...]
         let match = self.run(&str)
         return (match, str)
     }
 
-    public func map<B>(_ f: @escaping (A) -> B) -> Parser<B> {
+    func map<B>(_ f: @escaping (A) -> B) -> Parser<B> {
         Parser<B> { str -> B? in
             self.run(&str).map(f)
         }
     }
 
-    public func filter(_ f: @escaping (A) -> Bool) -> Parser<A> {
+    func filter(_ f: @escaping (A) -> Bool) -> Parser<A> {
         Parser<A> { str -> A? in
             self.run(&str).flatMap { f($0) ? $0 : nil }
         }
     }
 
-    public func flatMap<B>(_ f: @escaping (A) -> Parser<B>) -> Parser<B> {
+    func flatMap<B>(_ f: @escaping (A) -> Parser<B>) -> Parser<B> {
         Parser<B> { str -> B? in
             let original = str
             let matchA = self.run(&str)
